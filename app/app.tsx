@@ -17,7 +17,7 @@ import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
 import { useBackButtonHandler, AppNavigator, canExit, useNavigationPersistence } from "./navigators"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
-import { ToggleStorybook } from "../storybook/toggle-storybook"
+import SplashScreen from 'react-native-splash-screen'
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -46,6 +46,10 @@ function App() {
     })()
   }, [])
 
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [])
+
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
   // color set in native by rootView's background color.
@@ -56,7 +60,6 @@ function App() {
 
   // otherwise, we're ready to render the app
   return (
-    <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <AppNavigator
@@ -65,7 +68,6 @@ function App() {
           />
         </SafeAreaProvider>
       </RootStoreProvider>
-    </ToggleStorybook>
   )
 }
 
