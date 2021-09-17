@@ -17,7 +17,7 @@ import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
 import { useBackButtonHandler, AppNavigator, canExit, useNavigationPersistence } from "./navigators"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
-import { ToggleStorybook } from "../storybook/toggle-storybook"
+import SplashScreen from 'react-native-splash-screen'
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -32,11 +32,11 @@ function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
 
   useBackButtonHandler(canExit)
-  const {
-    initialNavigationState,
-    onNavigationStateChange,
-    isRestored: isNavigationStateRestored,
-  } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
+  // const {
+  //   initialNavigationState,
+  //   onNavigationStateChange,
+  //   isRestored: isNavigationStateRestored,
+  // } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
@@ -46,26 +46,30 @@ function App() {
     })()
   }, [])
 
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [])
+
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
   // color set in native by rootView's background color.
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!rootStore || !isNavigationStateRestored) return null
+
+  // if (!rootStore || !isNavigationStateRestored) return null
+  if (!rootStore ) return null
 
   // otherwise, we're ready to render the app
   return (
-    <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <AppNavigator
-            initialState={initialNavigationState}
-            onStateChange={onNavigationStateChange}
+            // initialState={initialNavigationState}
+            // onStateChange={onNavigationStateChange}
           />
         </SafeAreaProvider>
       </RootStoreProvider>
-    </ToggleStorybook>
   )
 }
 

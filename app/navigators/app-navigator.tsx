@@ -4,12 +4,13 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
+import { OnboardingScreen, LoginScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -27,24 +28,57 @@ export type NavigatorParamList = {
   welcome: undefined
   demo: undefined
   demoList: undefined
+  onboarding: undefined,
+  login: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
 const AppStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName="welcome"
-    >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
-    </Stack.Navigator>
-  )
+
+  const [firstLaunch, setFirstLaunch] = useState(null)
+
+  useEffect(() => {
+    AsyncStorage.getItem('alreadyLaunched').then( value => {
+      console.log("VALUE", value)
+      if (value === null){
+        AsyncStorage.setItem('alreadyLaunched', 'true');
+        setFirstLaunch(true)
+      }else{
+        setFirstLaunch(false)
+      }
+    });
+    
+  }, [])
+
+  if (firstLaunch === null){
+    return null;
+  } else if (firstLaunch === true){
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName= "onboarding"
+      >
+        <Stack.Screen name="onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="login" component={LoginScreen} />
+      </Stack.Navigator>
+    )
+  } else {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName= "login"
+      >
+        <Stack.Screen name="login" component={LoginScreen} />
+      </Stack.Navigator>
+    )
+  }
+
 }
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}

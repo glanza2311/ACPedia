@@ -1,5 +1,8 @@
 package com.acpedia;
 
+// react-native-splash-screen >= 0.3.1
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+
 // Unimodules https://docs.expo.io/bare/installing-unimodules/#configuration-for-android
 import com.acpedia.generated.BasePackageList;
 
@@ -35,6 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          // packages.add( new SplashScreenReactPackage());
 
           // Add unimodules
           List<ReactPackage> unimodules = Arrays.<ReactPackage>asList(
