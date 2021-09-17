@@ -32,11 +32,11 @@ function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
 
   useBackButtonHandler(canExit)
-  const {
-    initialNavigationState,
-    onNavigationStateChange,
-    isRestored: isNavigationStateRestored,
-  } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
+  // const {
+  //   initialNavigationState,
+  //   onNavigationStateChange,
+  //   isRestored: isNavigationStateRestored,
+  // } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
@@ -56,15 +56,17 @@ function App() {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!rootStore || !isNavigationStateRestored) return null
+
+  // if (!rootStore || !isNavigationStateRestored) return null
+  if (!rootStore ) return null
 
   // otherwise, we're ready to render the app
   return (
       <RootStoreProvider value={rootStore}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <AppNavigator
-            initialState={initialNavigationState}
-            onStateChange={onNavigationStateChange}
+            // initialState={initialNavigationState}
+            // onStateChange={onNavigationStateChange}
           />
         </SafeAreaProvider>
       </RootStoreProvider>
